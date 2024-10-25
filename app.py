@@ -19,7 +19,7 @@ from streamlit_extras.mention import mention
 
 warnings.filterwarnings("ignore")
 
-
+st.set_page_config(page_title="Linus the Line Chart Expert", page_icon="", layout="wide")
 
 with st.sidebar :
     st.image('images/White_AI Republic.png')
@@ -108,27 +108,27 @@ Linus: Axis labels are essential for clarity. The x-axis usually represents time
 
 
      def initialize_conversation(prompt):
-         if 'messages' not in st.session_state:
-            st.session_state.messages = []
-            st.session_state.messages.append({"role": "system", "content": System_Prompt})
-            chat =  openai.ChatCompletion.create(model = "gpt-4o-mini", messages = st.session_state.messages, temperature=0.5, max_tokens=1500, top_p=1, frequency_penalty=0, presence_penalty=0)
-            response = chat.choices[0].message.content
-            st.session_state.messages.append({"role": "assistant", "content": response})
+         if 'message' not in st.session_state:
+             st.session_state.message = []
+             st.session_state.message.append({"role": "system", "content": System_Prompt})
+             chat =  openai.ChatCompletion.create(model = "gpt-4o-mini", messages = st.session_state.message, temperature=0.5, max_tokens=1500, top_p=1, frequency_penalty=0, presence_penalty=0)
+             response = chat.choices[0].message.content
+             st.session_state.message.append({"role": "assistant", "content": response})
 
      initialize_conversation(System_Prompt)
 
-     for messages in st.session_state.messages :
+     for messages in st.session_state.message :
          if messages['role'] == 'system' : continue 
          else :
-           with st.chat_message(messages["role"]):
-                st.markdown(messages["content"])
+            with st.chat_message(messages["role"]):
+                 st.markdown(messages["content"])
 
      if user_message := st.chat_input("Say something"):
-         with st.chat_message("user"):
-              st.markdown(user_message)
-         st.session_state.messages.append({"role": "user", "content": user_message})
-         chat =  openai.ChatCompletion.create(model = "gpt-4o-mini", messages = st.session_state.messages, temperature=0.5, max_tokens=1500, top_p=1, frequency_penalty=0, presence_penalty=0)
-         response = chat.choices[0].message.content
-         with st.chat_message("assistant"):
-              st.markdown(response)
-         st.session_state.messages.append({"role": "assistant", "content": response})
+        with st.chat_message("user"):
+             st.markdown(user_message)
+        st.session_state.message.append({"role": "user", "content": user_message})
+        chat =  openai.ChatCompletion.create(model = "gpt-4o-mini", messages = st.session_state.message, temperature=0.5, max_tokens=1500, top_p=1, frequency_penalty=0, presence_penalty=0)
+        response = chat.choices[0].message.content
+        with st.chat_message("assistant"):
+             st.markdown(response)
+        st.session_state.message.append({"role": "assistant", "content": response})
